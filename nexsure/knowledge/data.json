@@ -1,0 +1,36 @@
+{
+  "product": "nexsure",
+  "status": "scaffold",
+  "application": null,
+  "environments": [
+    { "name": "QA", "baseUrlEnvVar": "NEXSURE_QA_BASE_URL" },
+    { "name": "Staging", "baseUrlEnvVar": "NEXSURE_STAGING_BASE_URL" }
+  ],
+  "activeBaseUrlEnvVar": "NEXSURE_BASE_URL",
+  "baseUrl": null,
+  "framework": null,
+  "appVersion": null,
+  "appVersionDate": null,
+  "credentials": [
+    {
+      "role": "Standard agent",
+      "usernameEnvVar": "NEXSURE_LOGIN_USER",
+      "passwordEnvVar": "NEXSURE_LOGIN_PASS"
+    }
+  ],
+  "loginFlow": {
+    "path": "/login",
+    "confirmed": false,
+    "steps": [
+      "Navigate to ${NEXSURE_BASE_URL}/login",
+      "Fill the username field with NEXSURE_LOGIN_USER",
+      "Fill the password field with NEXSURE_LOGIN_PASS",
+      "Submit and wait for the post-login landing page (see pages/dashboard.md)"
+    ]
+  },
+  "primaryNavigation": [],
+  "openItems": [
+    "No exploration run yet — run agents/explorer-agent.ts against a real Nexsure environment to populate this file."
+  ],
+  "lastVerified": null
+}
