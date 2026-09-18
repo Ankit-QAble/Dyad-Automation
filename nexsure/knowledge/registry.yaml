@@ -9,4 +9,13 @@
 #   journeys: [new-business, renewal]
 #   last_verified: 2026-08-15
 #   app_version: 4.2
-[]
+- page: login
+  file: pages/login.md
+  journeys: [login]
+  last_verified: 2026-09-17
+  app_version: null
+- page: create-client
+  file: pages/create-client.md
+  journeys: [login, create-client]
+  last_verified: 2026-09-17
+  app_version: null

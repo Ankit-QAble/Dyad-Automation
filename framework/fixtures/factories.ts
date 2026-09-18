@@ -41,6 +41,14 @@ export interface ClaimRef {
   policyNumber: string;
 }
 
+export interface ClientProfile {
+  clientName: string;
+  streetAddress: string;
+  city: string;
+  zip: string;
+  contactLastName: string;
+}
+
 /** Generates a unique, non-colliding synthetic applicant for one test run. */
 export function createApplicant(overrides: Partial<Applicant> = {}): Applicant {
   const id = runId();
@@ -73,6 +81,23 @@ export function createClaimRef(policyNumber: string, overrides: Partial<ClaimRef
   return {
     claimNumber: `AUTOMATION-CLM-${fakeDigits(9)}`,
     policyNumber,
+    ...overrides,
+  };
+}
+
+/** Generates a unique synthetic client profile — a fresh name each run so a
+ * "find a client" search reliably comes up with no match (a stale, reused name
+ * would find a previously-created client instead). Tenant config data (branch,
+ * department, etc.) that goes with client creation is real business data, not
+ * synthetic — it lives in <product>/knowledge/data.json instead. */
+export function createClientProfile(overrides: Partial<ClientProfile> = {}): ClientProfile {
+  const id = runId();
+  return {
+    clientName: `Automation Client ${id}`,
+    streetAddress: `${fakeDigits(3)} Automation Way`,
+    city: 'Springfield',
+    zip: fakeDigits(5),
+    contactLastName: `Automation${id}`,
     ...overrides,
   };
 }

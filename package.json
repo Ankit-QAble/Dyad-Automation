@@ -9,6 +9,8 @@
     "test:alis:login:headed": "PLAYWRIGHT_BASE_URL=https://alisuat.novatae.com/ALIS.BMS/APP/ playwright test --project=alis alis/tests/login/login.test.ts --headed",
     "test:alis:header:headed": "PLAYWRIGHT_BASE_URL=https://alisuat.novatae.com/ALIS.BMS/APP/ playwright test --project=alis alis/tests/header/header.test.ts --headed",
     "test:nexsure": "playwright test --project=nexsure",
+    "test:nexsure:login:headed": "PLAYWRIGHT_BASE_URL=https://jmiqaweb01.nexsure.com/nexui/ playwright test --project=nexsure nexsure/tests/login/login.test.ts --headed",
+    "test:nexsure:create-client:headed": "PLAYWRIGHT_BASE_URL=https://jmiqaweb01.nexsure.com/nexui/ playwright test --project=nexsure nexsure/tests/create_client/createClient.test.ts --headed",
     "test:smoke": "playwright test --grep @smoke",
     "test:shard": "playwright test --shard=${SHARD_INDEX}/${SHARD_TOTAL}",
     "report": "playwright show-report reports/html",

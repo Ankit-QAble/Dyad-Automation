@@ -1,5 +1,11 @@
 import { test as base } from '@playwright/test';
-import { TestDataRegistry, createApplicant, createPolicyRef, createClaimRef } from './factories';
+import {
+  TestDataRegistry,
+  createApplicant,
+  createPolicyRef,
+  createClaimRef,
+  createClientProfile,
+} from './factories';
 
 /**
  * Extends the base Playwright test with a `testData` fixture — the single entry
@@ -11,6 +17,7 @@ export interface TestData {
   applicant: typeof createApplicant;
   policyRef: typeof createPolicyRef;
   claimRef: typeof createClaimRef;
+  clientProfile: typeof createClientProfile;
 }
 
 export const test = base.extend<{ testData: TestData }>({
@@ -23,6 +30,7 @@ export const test = base.extend<{ testData: TestData }>({
         registry.track('policy', createPolicyRef(product, lineOfBusiness, overrides)),
       claimRef: (policyNumber, overrides) =>
         registry.track('claim', createClaimRef(policyNumber, overrides)),
+      clientProfile: (overrides) => registry.track('client', createClientProfile(overrides)),
     };
     await use(testData);
     await registry.releaseAll();

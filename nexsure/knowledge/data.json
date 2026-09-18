@@ -29,8 +29,32 @@
     ]
   },
   "primaryNavigation": [],
+  "createClient": {
+    "branch": "Automation Test Branch1",
+    "department": "Personal Lines AB1-3a/DB2-3 (2) 15days",
+    "personalLocationType": "Home Office",
+    "state": "California",
+    "notes": "Branch/department/location-type/state are real tenant configuration data, not per-run synthetic values — see nexsure/knowledge/pages/create-client.md's Edge Cases for why these specific options were picked."
+  },
   "openItems": [
     "No exploration run yet — run agents/explorer-agent.ts against a real Nexsure environment to populate this file."
   ],
-  "lastVerified": null
+  "lastVerified": null,
+  "newClient": {
+    "clientType": "Personal",
+    "locationType": "Home Office",
+    "streetAddress": "326 E 7th St",
+    "city": "Leadville",
+    "state": "Colorado",
+    "zip": "80461"
+  },
+    "addContect": {
+    "lastName": "Automation"
+  },
+    "assignment": {
+      "branch": "2.5 branch",
+      "department": "Allied Health",
+      "responsibility": "Account Executive",
+      "employee": "Automation, DyadQA2.5"
+    }
 }

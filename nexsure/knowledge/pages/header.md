@@ -4,6 +4,8 @@ Element-by-element reference for the Nexsure app (`nexui`), built for browser-au
 
 **Last updated:** 2026-09-17 · **Environment:** jmiqaweb01 (QA) · **Frontend:** Vue.js SPA, hash-based routing (`#/...`), zero native `<form>` elements throughout, `<title>` stays `"Nexsure"` on every screen — don't rely on the title or full page navigation events for automation waits, watch DOM content or the URL hash instead. Pendo analytics/guides are active app-wide (elements with `id="pendo..."`, `_pendo_*` in `localStorage`, and a floating Resource Center badge) — automation may occasionally see a Pendo-injected overlay.
 
+> **Documentation convention:** whenever a screen has a dropdown/select, open it and record the full option list here rather than leaving it as an open item.
+
 ---
 
 ## Page: Sign-in
@@ -124,6 +126,131 @@ The `nex_required_input noStar` classes indicate both fields are treated as requ
 
 ---
 
+## Global header / navigation (present on every app screen, post-login)
+
+| Fact | Value |
+|---|---|
+| Present on | Every screen after sign-in (not the login screen itself) |
+| Container | `nav#navbar > .branding` + `.menu_bar` |
+| Menu mechanism | 4 click-to-open dropdown menus (`.dropdownMenuWrapper.menuTarget`), all sharing the same `.dropdownMenu > .dropdownSection > .dropdownLink > a` markup |
+
+### Overview
+
+The top bar is a single shared component rendered around the whole app shell, not part of any individual page — it's what makes the Home icon's menu effectively the app's primary navigation. It has three zones: the tenant logo on the left, a search + quick-access icon cluster in the middle, and four account-level menu icons on the right (Home, Profile, Organization, Help), each of which opens its own dropdown.
+
+### Visual layout
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│ [R5 Insurance Agency]  🔍  [Enter search keywords] [Search]  ⓘ    🔔📞✉️✅☁️🔗⭐   🏠 👤 🗺️ ❓ │
+└──────────────────────────────────────────────────────────────────────────┘
+   logo (non-link)  global-search   inline search box    info   quick-access icons   account menus
+                      modal trigger                      (hover)  (7, see below)      (4 dropdowns, see below)
+```
+
+### Element inventory
+
+| # | Element | Type / role | Visible text | Notes |
+|---|---|---|---|---|
+| 1 | Branding logo | static, `div.branding > img` | "R5 Insurance Agency" | Not wrapped in an `<a>`/`<button>` — plain markup, click behavior not confirmed (see Open items). |
+| 2 | Global Search icon | button, title `Global Search` | (binoculars icon) | Opens a **modal dialog** titled "Global Search", separate from the inline search box — see Behavior. |
+| 3 | Inline search input | textbox | placeholder `Enter search keywords` | `.searchBox input`, wrapper `id="pendoSearchBoxGuide"`. |
+| 4 | Search button | button | `Search` | `id="PendoSearchGuide"`. |
+| 5 | Info icon | icon, no visible action on click | — | Sits right after the Search button; clicking produced no visible change in this pass — likely a hover-only tooltip. |
+| 6–12 | Quick-access icons (×7) | buttons/icons, titled | `View New Alerts`, `View Phone Calls`, `View New Messages`, `View Today's actions`, `View eServices`, `View eLinks`, `View Bookmarks` | Clicking "View New Alerts" produced no visible UI change in this session (likely nothing to show, or it requires a different trigger) — see Open items. |
+| 13 | Home menu | button, name `Home` | (house icon) | Opens the app's **primary navigation menu** — see below, this is the most important menu in the header. |
+| 14 | Profile menu | button, name = user's short name (e.g. `Dyad 7772 A.`) | — | Opens the account menu — see below. |
+| 15 | Organization menu | button, name `Organization` | (sitemap icon) | Opens the org menu — see below. |
+| 16 | Help menu | button, name `Help` | (question-mark icon) | Opens the help menu — see below. |
+
+### Home menu — full option list
+
+Clicking the Home icon opens the app's primary navigation, grouped into 7 sections (dividers between groups, no group headings):
+
+| Group | Items |
+|---|---|
+| 1 | Dashboard |
+| 2 | Leads, Submissions |
+| 3 | Opportunities, Marketing |
+| 4 | Binder Log, Edits, Endorsements, Audits |
+| 5 | Policies, Cancellations, Claims |
+| 6 | Delivery, Phone Log, Interface |
+| 7 | Batch Print |
+
+### Profile menu — full option list
+
+| Item |
+|---|
+| My Inbox |
+| My Actions |
+| My Profile |
+| Logout |
+| Administrator |
+
+### Organization menu — full option list
+
+| Item |
+|---|
+| Setup |
+| Manage |
+| All Employees |
+| Accounting |
+| Campaigns |
+| Reports |
+
+### Help menu — full option list
+
+Header reads "Help Center", then:
+
+| Item |
+|---|
+| Videos |
+| Knowledgebase |
+| Contact Support |
+
+### DOM & structure notes
+
+- Every one of the 4 right-hand menus shares one markup pattern: `.dropdownMenuWrapper.menuTarget` (the clickable icon) containing `.dropdownMenu > .dropdownSection > .dropdownLink > a` (the popup content, one `.dropdownSection` per visual group — this is how the Home menu's 7 groups are structured in the DOM, one `.dropdownSection` each).
+- The quick-access icon row is `.widgetIcons > .widgetLink[title="..."]`, distinct from the account-menu markup above.
+- The inline search box and its button carry Pendo guide IDs (`#pendoSearchBoxGuide`, `#PendoSearchGuide`) — they're active Pendo targets, separate from the Global Search modal.
+- All icons use inline SVGs with the same `data-v-240f170f` Vue scoped-style hash seen elsewhere in the app — don't select on it.
+
+### Behavior & persistence
+
+- The Global Search icon opens a modal dialog ("Global Search") that, in this pass, stayed on a loading spinner indefinitely with no query entered — it may require typing a query before it resolves, or it may depend on a service not exercised here. Treat as unconfirmed (see Open items).
+- The header itself does not appear on the sign-in screen — it's part of the authenticated app shell only.
+- None of the 4 dropdown menus appear to change the URL hash on open (only on selecting an item) — safe to open/close them without affecting navigation state.
+
+### Selectors
+
+| Element | Accessible role / label | Fallback CSS |
+|---|---|---|
+| Global Search icon | button, title `Global Search` | `.altSearchBtn` |
+| Inline search input | textbox, placeholder `Enter search keywords` | `.searchBox input` |
+| Search button | button, name `Search` | `#PendoSearchGuide` |
+| Quick-access icon (any) | element with matching `title` | `.widgetIcons [title="View New Alerts"]` (swap title text) |
+| Home menu trigger | button, name `Home` — **not actually an ARIA button, see note below** | 1st of the 4 `.dropdownMenuWrapper.menuTarget` elements |
+| Profile menu trigger | button, name = user's short name | 2nd of the 4 |
+| Organization menu trigger | button, name `Organization` | 3rd of the 4 |
+| Help menu trigger | button, name `Help` | 4th of the 4 |
+| Any open menu's items | link, item text (e.g. `Policies`) | `.dropdownMenu .dropdownSection .dropdownLink a` (scope to the open menu) |
+
+> **Correction (live-verified 2026-09-17):** the Home/Profile/Organization/Help
+> triggers render as plain `generic` elements in the accessibility tree, not
+> ARIA `button`s — `getByRole('button', { name: 'Home' })` times out with zero
+> matches. Use the CSS fallback instead: `.dropdownMenuWrapper.menuTarget` (1st
+> of 4 for Home). Confirmed via nexsure/tests/create_client/, which uses this to
+> navigate Home → Opportunities ahead of client creation.
+
+### Open items
+
+- Whether the branding logo is clickable (no `<a>`/`<button>` wrapper found, but a JS click-handler can't be ruled out without clicking it).
+- Why the Global Search modal never left its loading state — needs a retry with an actual query typed in.
+- Why the quick-access icons (Alerts, Phone Calls, etc.) produced no visible change on click — may need existing data in that category to show anything, or may open a panel elsewhere on the page that was missed.
+- Destination pages for each Home-menu, Profile-menu, Organization-menu, and Help-menu item (only the menu contents were captured, not what each link opens).
+
+---
+
 ## Page: Dashboard (home, `#/`)
 
 | Fact | Value |
@@ -177,8 +304,8 @@ The dashboard is the landing screen after sign-in. It's a two-column layout: a w
 | 7 | Help icon | button | `Help` | Far-right group, 4th icon. |
 | 8 | Greeting heading | static text | `Good Morning, {user}!` | Text changes with time of day ("Good Afternoon"/"Good Evening") — don't hardcode "Morning" in assertions. |
 | 9 | Last-sign-in line | static text | `Last sign in was on {date/time}` | Timestamp updates every session — not a stable assertion target, only a "logged in" landmark. |
-| 10 | Dashboards selector | combobox (vue-select) | `Overview` | Picks which dashboard *definition* is shown. Selected value renders in `span.selected_dash_header`. |
-| 11 | Viewing selector | combobox (vue-select) | `My Dashboard` | Picks *whose* dashboard is shown; same vue-select component as #10 but carries an extra `.viewMode` class. |
+| 10 | Dashboards selector | combobox (vue-select) | `Overview` | Picks which dashboard *definition* is shown. Selected value renders in `span.selected_dash_header`. Full option list: **Overview, Analytics**. |
+| 11 | Viewing selector | combobox (vue-select) | `My Dashboard` | Picks *whose* dashboard is shown; same vue-select component as #10 but carries an extra `.viewMode` class. Full option list: **My Dashboard, Organization Dashboard**. |
 | 12 | Widget: New Message(s) Today | card, class `.widget_container` | title `New Message(s) Today`, a count, a "View All" link, sub-stats, "more/less" toggle | Left accent bar colored per widget (blue). |
 | 13 | Widget: Actions Due Today | card, class `.widget_container` | title, count, "View All" link, "Due this month" / "Past due" stats, an Open/Closed breakdown sub-panel | Left accent bar green. |
 | 14 | Widget: Pending Cancellations | card, class `.widget_container` | title, count, "Cancelled" / "Change" stats | Left accent bar red. |
@@ -222,7 +349,7 @@ The dashboard is the landing screen after sign-in. It's a two-column layout: a w
 
 - Destinations/behavior of the 7 quick-access icons (Alerts, Phone Calls, Messages, Today's actions, eServices, eLinks, Bookmarks) — not clicked through yet.
 - Destinations of the Home, Organization, and Help icons.
-- Options available inside the "Dashboards: Overview" and "Viewing: My Dashboard" dropdowns (not opened).
+- What "Analytics" (Dashboards selector) and "Organization Dashboard" (Viewing selector) actually display — options are now enumerated, but only the "Overview" + "My Dashboard" combination was opened and inspected.
 - Global search results screen/behavior.
 - Full widget catalog — only 3 widgets were visible in the default "My Dashboard" view; other dashboard/view combinations may show more.
 - Navigation structure beyond the dashboard (left/side module menu, if any — none was visible on this screen).
