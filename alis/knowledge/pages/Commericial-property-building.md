@@ -1,0 +1,63 @@
+Commercial Property — Building-Level Data Entry (ALIS)
+
+Overview
+Once a Location has been saved on the Add/Edit Risk popup's Commercial Property tab (see `add-edit-risk.md`, "Commercial Property tab"), that location's row grows an "Add" ("+") icon. Clicking it adds a Building under that location and reveals a second-level, two-tab editor — "Property Information" and "Optional Coverage/Limits/Deductibles" — where the actual insurable values (limits, deductibles, construction/classification detail) are entered. This document covers that Building-level editor only; the Location form itself, and everything else in the Add/Edit Risk popup, is covered in `add-edit-risk.md`.
+
+Field
+Value
+Application
+ALIS (Alis Core / Alis Custom — Dyad Tech Private Limited automation POC); part of the same legacy ASP.NET Add/Edit Risk popup as `add-edit-risk.md`
+Environment
+UAT
+Opened via
+Add/Edit Risk popup → Commercial Property tab → a saved Location row → its "+" ("Add"/"click to add building") icon
+
+Layout once a Building is added
+The Location's row grows a nested row/grid of its own: Building No., Total Premium, and per-building Edit / View / Copy / Delete icons. Beneath it, a "Location No.: <n> Building No.: <n>" heading appears with two tabs — Property Information (selected by default) and Optional Coverage/Limits/Deductibles — and, top right of this whole section, a page-level Save / Cancel pair that is separate from the Add/Edit Risk popup's own top-right Save-equivalent ("Close & Apply").
+
+Behavior / callout — this page-level Save matters
+Every field described below under "Property Information tab" (the Limits/Deductibles Of Insurance grid, Deductibles section, and the Property Information/Construction/Protective Devices/Additional Question fields) is client-side only until this page-level Save button is clicked — confirmed the hard way: after filling in a full pass of these fields, a forced tab reload (needed to recover from the hang described below) discarded every one of them, even though the Location row itself and anything added via the Optional Coverage/Limits/Deductibles sub-tab (see below) survived. A second attempt, identical except for actually clicking this Save button before doing anything else, persisted correctly (re-verified by reopening the Building's Edit icon afterward). In short: fill in Property Information, then Save immediately — don't switch tabs or navigate away first.
+
+Property Information tab
+"Limits/Deductibles Of Insurance" grid — one row per coverage part: Building, Content/Personal Property, "Extra Expense Include [checkbox] BI/Rents:" (with its own "ML" checkbox alongside), "[checkbox] Other Coverage:", "Other Structure:", "[checkbox] Equipment Breakdown:" (Limits box disabled unless checked). Columns: Limits($), Co-Ins(%)/Monthly Limit, Valuation (dropdown: -Select-, Actual Cash Value, Replacement Cost Value, Agreed Amount/Value, Functional Replacement Cost, Dwelling and Personal Effects, Dwelling Only, ARL, Actual Loss Sustained), Cause of Loss (dropdown: -Select-, Basic, Broad, Earthquake, Special Excluding Theft, Special, Special Including Theft, Named Storm), Rate(%), Credit/Debit, Final Rate(%), Premium($); the Building row additionally has a "-Select Default-" dropdown next to its Premium box. Typing a Limits($) value auto-fills that row's Co-Ins(%) to 80.00 (observed for Building, Content/Personal Property, and BI/Rents). Below the grid: TIV: box, Wind/Flood/Theft checkboxes (plain, no amount), Earthquake($) with its own checkbox + an "Included" checkbox, AOP($) box, and on the right Total Premium/Minimum Premium boxes plus Incl / Round Amount (checked by default) / Rated / NonRated controls.
+
+Deductibles section (same tab, below the grid): Wind Zone / Flood Zone dropdowns; a Wind row ($ or % dropdown, amount, Min. Per Occurrence amount + dropdown, "Included" checkbox, and a second, unlabeled checkbox whose label "Excluded" is printed on the line below it — ticking Excluded grays out/disables that row's $ and amount boxes); Earthquake, Flood, AOP, Other, Named Storm, Named Hurricane, Water, Theft (with both Included and Excluded checkboxes), and Wind/Hail (also both Included and Excluded) rows, each with its own $/% dropdown and amount box; a Schedule Property checkbox at the bottom.
+
+Property Information / construction section: Construction Type (dropdown, 30 options incl. Frame, Wood Frame/Log, Stucco, Joisted Masonry/Block, Joisted Masonry, …), Year Built (dropdown, 328 options, "-Select-" then descending years), Sq Ft, No. of Families, Distance to Coast (dropdown: -Select-, 0-1 Mile, 1-2 Mile, 2-3 Mile, … up to 12 options), Distance to Tidal Water, Home No., Unit No.
+
+Building Improvements/Updates section: ClassName/CSP Code — a type-ahead text box (not a plain dropdown): typing a partial class name (e.g. "Apartments with Mercantile") shows a scrollable suggestion list formatted "(<CSP code>) <full class name>" (e.g. "(0321) Apartments with Mercantile Occupancies - Up to 10 Units"); clicking a suggestion fills a second, adjacent read-only-looking code box (shown as "0321" — note the leading zero, vs. the bare "321" a source spec may quote) and auto-fills the separate "Classification Description" box on the right with that suggestion's full text. Also: Nautilus GL Class Code (dropdown, "-Select-" only seen), Construction(%), Prot Class (dropdown 1–10 plus "-Select-"), Storm Shutter Fitted (Yes/No/None radios, defaults to None), Wiring Year / Roofing Year / Plumbing Year / Heating Year (each a year dropdown plus its own Full and Partial checkboxes), Occupancies (dropdown, 162 options, e.g. "Business Income Interruption"), Vacant Since dropdown + date field, Building Code Grade, #Of Stories, Tax Code, Right/Left/Front/Rear Exposure and Distance, Other Year (dropdown), Wind Class (dropdown), Roofing Material / Roofing Style (dropdowns), Roof Age, HVAC (dropdown + Full/Partial checkboxes), and Yes/No/None radio triplets for Swimming Pool, Approved Fence, Hot Tub, Exotic or Dangerous Pet Breed, Diving Board.
+
+Protective Devices section: #Fire Division, Territory Code, #Units in Fire Division, Sprinklers (Yes/No/None radios, defaults to None), Sprink(%) (only meaningful once Sprinklers = Yes), Fire District Code Number, Distance To Hydrant (feet), Fire/EC Rate(%), Distance To Fire Station (miles), Premium Group, and a Protection Device Type grid (System / Smoke / Temp / Burglar checkboxes for Central, Direct, Local).
+
+Additional Question — Service Station Program: Operations Type (dropdown: -Select-, Service Station, Truck Stop), Discretional Adjustment Type (dropdown: -Select-, Premium Discount, Premium Surcharge) — selecting either option reveals a newly-required "Discretionary Adjustment" amount box (not present while the dropdown is at "-Select-"), Underlying Policy Number, GC TIER (dropdown: -Select-, Tier 1, Tier 2), Tier Factor Number, and a required Crime Score box.
+
+Additional Question — Named Storm: Risk Company of underlying Property or Package that excludes Named Storm coverage, Underlying Property or Package that excludes Named Storm coverage, and further fields below (Building – Percent Completed, BCEG Classification Code, Named Storm Deductible, Named Storm Ded Min Per Occurrence) — not scrolled to / exercised in this pass.
+
+Optional Coverage/Limits/Deductibles tab
+A different shape from Property Information: two small entry forms side by side, each an independent, immediately-saved add — unlike the Property Information tab, nothing here depends on the page-level Save button.
+- Limit (left): Coverage Type (required dropdown, 74 options, e.g. Canopies, Sign, Signs, Awning, Fence, Glass, Ordinance & Law Coverage A/B/C, Windstorm, …), Valuation, Cause of Loss (same option lists as the main grid), Credit/Debit, Include in TIV (checkbox), Limit($) (required), Coins(%), Rate(%), Final Rate(%), Premium($), a Round Amount checkbox (checked by default), and its own Save/Cancel.
+- Deductible (right): Deductible Type (required dropdown, 56 options — a materially different list from Coverage Type, e.g. Builders Risk, Business Income variants, Equipment Breakdown, Ordinance & Law Coverage A/B/C, Sign, Wind/Hail Deductible, Windstorm, …), Amount($) (required), and its own Save/Cancel.
+Clicking the Limit side's Save shows an "Insert Success" toast and adds a row (Coverage Type, Limit($), Premium($), Edit/View/Copy/Delete) to a grid that appears beneath the two forms — confirmed working for two separate entries (Canopies, then Signs) on the same building, both ending up as separate rows.
+
+Behavior / callout — this sub-form's Save can hang the popup tab
+Clicking Save on the Limit side a second time in the same session (i.e. adding a second Optional Coverage row right after a first one succeeded) reproducibly made the popup tab stop responding to screenshots/JS ("page still loading" for minutes) — once severely enough that the browser extension's connection dropped entirely. In both occurrences the entry had, in fact, saved successfully server-side; reloading the tab (or, after the extension reconnected, simply re-reading the page) showed the new row present. Net effect: treat a hang here as "probably still processing," not as data loss — but expect to need a tab reload (which, per the callout above, will discard any *unsaved* Property Information tab edits) or a wait for the extension to reconnect before you can confirm it.
+
+Open items / to verify
+- The Named Storm additional-question fields below Named Storm Deductible/BCEG were not scrolled to or filled in this pass.
+- Whether "Include in TIV" on the Optional Coverage/Limits/Deductibles Limit form actually adds that row's Limit($) into the Building's TIV total.
+- What the Optional Coverage/Limits/Deductibles Deductible side's own Save/row-grid looks like once used (only the Limit side was exercised — Wind (Deductible)=EXCLUDED and AOP (Deductible)=$1,000 from the source spec were entered on the main Property Information tab's Deductibles section instead, since those coverage parts already have dedicated fields there).
+- Root cause of the Optional Coverage/Limits/Deductibles Save hang — whether it's server-side (a slow postback) or an artifact of automated/rapid consecutive submissions; an ordinary interactive session waiting a natural pause between saves might not hit it.
+- The Nautilus GL Class Code dropdown's own option list and purpose relative to ClassName/CSP Code.
+- Full Named Storm / GC TIER / Wind Class / Roofing Material / Roofing Style option lists (seen but not enumerated).
+
+(Element IDs/classes/selectors intentionally omitted — tracked separately.)
+
+Data used to produce this document
+Values may change in future explorations — treat these as a worked example, not a fixed convention. Against quote CPK-BA-02 (submission SUB1655627, Insured: Zeel1 Patel), option NBS-1 (Hadron Specialty Insurance Company, Commercial Package), Location #1 (131 Southeast Main, Bethel CT 06801, Territory 507, County Fairfield — see `add-edit-risk.md`), Building No. 1:
+- Limits/Deductibles Of Insurance: Building = $100,000, Content/Personal Property = $100,000, Extra Expense Include ✓ / BI/Rents = $20,000 (Valuation = Actual Cash Value, Cause of Loss = Basic, Co-Ins auto-filled 80.00 on all three) — Other Coverage, Other Structure, Equipment Breakdown left blank. TIV = $220,000.
+- Deductibles: Wind = Excluded (checkbox), AOP = $1,000. Earthquake/Flood/Other/Named Storm/Named Hurricane/Water/Theft/Wind-Hail left blank.
+- Property Information: Construction Type = Frame, Year Built = 2025, Sq Ft = 50, No. of Families = 2, Distance to Coast = 1-2 Mile.
+- Building Improvements/Updates: ClassName/CSP Code = "Apartments with Mercantile Occupancies - Up to 10 Units" (code 0321, auto-filling Classification Description to match), Prot Class = 4, Storm Shutter Fitted = None (default), Wiring/Roofing/Plumbing/Heating Year = 2025 (Full/Partial left unchecked throughout), Occupancies = Business Income Interruption, Ground Floor left unchecked.
+- Protective Devices: Sprinklers = Yes, Sprink(%) = 100.
+- Additional Question – Service Station Program: Discretional Adjustment Type = Premium Surcharge, Discretionary Adjustment = 1, Crime Score = 0. Operations Type, Underlying Policy Number, GC TIER, Tier Factor Number left blank.
+- Optional Coverage/Limits/Deductibles (Limit side): Canopies = $20,000 limit, Signs = $60,000 limit — both added as separate rows, no Valuation/Cause of Loss/rate fields set on either.
