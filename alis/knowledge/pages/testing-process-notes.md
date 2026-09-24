@@ -1,0 +1,20 @@
+Testing Process Notes — standing rules for this QA knowledge-base project
+
+This file isn't a page of the ALIS app like the rest of this knowledge base — it's the operating rules for how testing passes against ALIS are run and documented. Read this first, before starting any new instruction from the user, especially after a break, a compaction, or picking work back up after several other pages have been documented.
+
+Rule 1 — every new instruction starts from brand-new data unless the user says otherwise
+When the user gives a new instruction to test a flow, screen, or feature, the default is: start from a brand-new Insured and Submission, created fresh via login → Clearance Search → +New Insured (see `login.md`, `header.md`, `new-insured-form.md`). Do NOT navigate back into an existing/previous submission, quote, or option to "continue" testing unless the user's instruction is explicitly a continuation of that same submission (e.g. "go back to that same quote and change X"). If there's any ambiguity about whether an instruction means "continue on the existing data" or "start fresh," the default assumption is start fresh — re-using existing data (especially anything already bound/approved, or anything from a prior, separate test pass) is the mistake to avoid, not the safe default.
+
+This matters more once an option has been through Bind & Invoice (see `bind-and-invoice.md`): a bound option is no longer a "clean" testbed. Its Premium-tab fields, status, and downstream records (policy number, invoice, Policy Generation) are all now live consequences of that specific bind — going back into it to tweak fields "for the next test" mixes two different tests together and makes both harder to document cleanly. If the user asks for further changes to an already-bound option specifically, that's fine — but it's a distinct, explicit instruction, not the default next step after a bind completes.
+
+Rule 2 — when told to "start from scratch" / "start from login," take it literally
+That means: actually return to the login screen (or use the avatar-menu Logout, then log back in — see `header.md`) and perform the full flow again from the top — new Insured, new Submission, new Quote, and onward — rather than reusing anything from the in-progress browser tab's current state. Don't interpret it as "keep working in the same tab, just navigate to a fresh-looking screen."
+
+Rule 3 — capture new findings into the knowledge base as they happen, not just at natural stopping points
+Every screen/action gets its own markdown file mirroring the real framework repo's `alis/knowledge/pages/` folder structure, written in plain language, with: what the screen is and how it's reached; the fields/behavior actually observed; explicit verification results against whatever reference data the user supplied; a caution that rated amounts/dates/form lists are a snapshot of one test pass, not fixed constants; and an "open items" list for anything not exercised. Cross-link related pages (e.g. `quote-option-detail.md` ↔ `bind-and-invoice.md` ↔ `rate-summary.md`) rather than duplicating content.
+
+Rule 4 — a UI element that appears to do nothing may just be showing a toast you missed
+Several ALIS validation messages render as a toast that fades in 1–2 seconds with no lingering visual cue. Screenshot immediately after a click, not after a multi-second wait, before concluding a button is broken — see `bind-and-invoice.md` for the full writeup of this pattern, which cost significant time to diagnose once already.
+
+Rule 5 — after any action with visible side effects (a bind, a save, a status change), check for new tabs/popups before moving on
+This app has triggered new browser tabs (a "Policy Generation" popup) and in-page modals (a "Popup Notes" system-note popup) automatically as side effects of actions like Bind & Invoice, without any click specifically requesting them. Call the tab-context tool and take a screenshot after any state-changing action, not just after actions that are expected to open something.
