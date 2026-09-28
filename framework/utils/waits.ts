@@ -15,6 +15,15 @@ export async function waitForVisible(locator: Locator, timeoutMs = 10000): Promi
   await locator.waitFor({ state: 'visible', timeout: timeoutMs });
 }
 
+/** Waits until the document has finished its initial DOM loading phase. */
+export async function waitForDomReady(page: Page, timeoutMs = 30000): Promise<void> {
+  await page.waitForFunction(
+    () => document.readyState === 'interactive' || document.readyState === 'complete',
+    undefined,
+    { timeout: timeoutMs },
+  );
+}
+
 /** Waits for a loading/spinner element to appear (briefly) and then disappear. */
 export async function waitForSpinnerToClear(
   spinner: Locator,
