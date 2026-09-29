@@ -305,12 +305,12 @@ test('test', async ({ page, testData }, testInfo) => {
   await page.getByRole('option', { name: 'Edit', exact: true }).click();
   await waitAfterAction();
   await expect(page.getByText('Edit Policy', { exact: true })).toBeVisible({ timeout: 30000 });
-  const editDateField = page.getByRole('textbox').filter({ hasValue: '09/24/2026' }).first();
-  await editDateField.fill('09/25/2026');
+  const editDateField = page.locator(".form_group:has-text('Effective Date') input");
+  await editDateField.fill(tomorrowFormatted);
   await waitAfterAction();
   await editDateField.press('Tab');
   await waitAfterAction();
-  await expect(editDateField).toHaveValue('09/25/2026');
+  await expect(editDateField).toHaveValue(tomorrowFormatted);
   await page.getByRole('button', { name: 'Generate Edit' }).click();
   await waitAfterAction();
   await expect(page.locator('#entity_console')).toContainText('Pending Edit');
