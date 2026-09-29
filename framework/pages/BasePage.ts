@@ -38,33 +38,28 @@ export abstract class BasePage {
   // behavior stays consistent in one place.
   // ---------------------------------------------------------------------------
 
-  /** Clicks an element with 1s pre-wait. */
+  /** Clicks an element. */
   protected async click(locator: Locator): Promise<void> {
-    await this.page.waitForTimeout(1000);
     await locator.click();
   }
 
-  /** Clears and types text into a field with 1s pre-wait. */
+  /** Clears and types text into a field. */
   protected async enter(locator: Locator, value: string): Promise<void> {
-    await this.page.waitForTimeout(1000);
     await locator.fill(value);
   }
 
-  /** Picks an option from a `<select>` with 1s pre-wait. */
+  /** Picks an option from a `<select>` (or Playwright-compatible listbox). */
   protected async select(locator: Locator, value: string): Promise<void> {
-    await this.page.waitForTimeout(1000);
     await locator.selectOption(value);
   }
 
-  /** Ticks a checkbox/radio with 1s pre-wait. */
+  /** Ticks a checkbox/radio. */
   protected async check(locator: Locator): Promise<void> {
-    await this.page.waitForTimeout(1000);
     await locator.check();
   }
 
-  /** Unticks a checkbox with 1s pre-wait. */
+  /** Unticks a checkbox. */
   protected async uncheck(locator: Locator): Promise<void> {
-    await this.page.waitForTimeout(1000);
     await locator.uncheck();
   }
 

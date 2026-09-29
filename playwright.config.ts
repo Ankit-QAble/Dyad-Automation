@@ -22,18 +22,29 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? undefined : undefined,
+  timeout: 60 * 1000,
 
   /* All execution artifacts (traces, screenshots, videos, reports) go under
    * /reports — gitignored, published as CI artifacts. */
   outputDir: './reports/test-results',
-  reporter: [
+  // reporter: [
+  //   ['html', { outputFolder: './reports/html', open: 'never' }],
+  //   ['json', { outputFile: './reports/results.json' }], // consumed by agents/triage-agent.ts
+  //   ['./framework/utils/reporting.ts'], // scenario-summary.{json,md} for traceability
+  //   [process.env.CI ? 'github' : 'list'],
+
+  // ],
+    reporter: [
     ['html', { outputFolder: './reports/html', open: 'never' }],
-    ['json', { outputFile: './reports/results.json' }], // consumed by agents/triage-agent.ts
-    ['./framework/utils/reporting.ts'], // scenario-summary.{json,md} for traceability
+    ['json', { outputFile: './reports/results.json' }],
+    ['./framework/utils/reporting.ts'],
+    ['./framework/reporters/client-step-reporter.ts'], // ← add this line
     [process.env.CI ? 'github' : 'list'],
   ],
 
   use: {
+    actionTimeout: 1000 * 1000,
+    navigationTimeout: 800 * 1000,
     /* Page Objects store relative paths (from their knowledge file's "## URL"
      * section) and navigate via BasePage.goto(), which resolves against this.
      * Point it at whichever product's base URL this run targets, e.g.
@@ -44,6 +55,8 @@ export default defineConfig({
     trace: 'on',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    // Wait for stable page state
+    waitUntil: 'domcontentloaded',
   },
 
   projects: [
@@ -63,4 +76,5 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
+  
 });
