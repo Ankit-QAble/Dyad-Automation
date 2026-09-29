@@ -56,5 +56,35 @@
       "department": "Allied Health",
       "responsibility": "Account Executive",
       "employee": "Automation, DyadQA2.5"
+    },
+    "policyLifecycle": {
+      "product": "X100_Commercial Lines",
+      "lineOfBusiness": "X100_General Liability (126)",
+      "issuingCarrier": "AAA Carrier",
+      "billingCarrier": "AAA Carrier",
+      "notes": "Product/LOB/Carrier are real tenant master data (see nexsure/knowledge/pages/opportunities_new.md and opportunuty_quote_info.md) — not per-run synthetic values."
+    },
+
+    "endorsement": {
+      "description": "Process endorsement.",
+      "notes": "Process endorsement."
+    },
+    "policyEdit": {
+      "description": "Policy edit transaction"
+    },
+    "renewal": {
+      "description": "Policy renewal"
+    },
+    "cancellation": {
+      "reason": "Insured Request",
+      "method": "Flat",
+      "status": "Appointment"
+    },
+    "rewrite": {
+      "primaryState": "Colorado"
+    },
+    "existingClient": {
+      "name": "automation_001",
+      "notes": "A pre-existing client record in the QA tenant, found via Find a Client's Keywords search rather than created fresh each run — used by the policy_lifecycle_existing_client test so repeat runs don't need a brand-new client every time."
     }
 }
