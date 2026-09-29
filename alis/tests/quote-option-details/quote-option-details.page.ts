@@ -314,6 +314,7 @@ export class QuoteOptionDetailPage extends BasePage {
     const percentInput = reviewPage.locator('#tcPolicyMissingValues_tpMissingValues_xxMEPInPerWSign');
 
     await dollarInput.click();
+    
     await dollarInput.fill(mepDollar);
     await percentInput.click();
     await percentInput.fill(mepPercentage);

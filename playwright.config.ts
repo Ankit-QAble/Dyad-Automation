@@ -26,10 +26,18 @@ export default defineConfig({
   /* All execution artifacts (traces, screenshots, videos, reports) go under
    * /reports — gitignored, published as CI artifacts. */
   outputDir: './reports/test-results',
-  reporter: [
+  // reporter: [
+  //   ['html', { outputFolder: './reports/html', open: 'never' }],
+  //   ['json', { outputFile: './reports/results.json' }], // consumed by agents/triage-agent.ts
+  //   ['./framework/utils/reporting.ts'], // scenario-summary.{json,md} for traceability
+  //   [process.env.CI ? 'github' : 'list'],
+
+  // ],
+    reporter: [
     ['html', { outputFolder: './reports/html', open: 'never' }],
-    ['json', { outputFile: './reports/results.json' }], // consumed by agents/triage-agent.ts
-    ['./framework/utils/reporting.ts'], // scenario-summary.{json,md} for traceability
+    ['json', { outputFile: './reports/results.json' }],
+    ['./framework/utils/reporting.ts'],
+    ['./framework/reporters/client-step-reporter.ts'], // ← add this line
     [process.env.CI ? 'github' : 'list'],
   ],
 
@@ -62,4 +70,5 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
+  
 });

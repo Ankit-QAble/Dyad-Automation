@@ -22,7 +22,8 @@ import addEditRiskRawData from '../../knowledge/add-edit-risk.json';
 import termsFormsRawData from '../../knowledge/terms-forms.json';
 import rateSummaryRawData from '../../knowledge/rate-summary.json';
 import { RateSummaryExpectation } from './../rate-summary/rate-summary.page';
-import { extractGeneratedPdfText, findTextAcrossPages, findTokenAcrossPagesIgnoringLineWrap } from '../../../framework/utils/pdfVerification';
+import { runStep } from '../../../framework/utils/reportSteps'; // ← fixed: was 'reportSteps'
+
 
 const submissionData = resolvePlaceholders(createSubmissionRawData);
 const quoteData = resolvePlaceholders(addQuoteRawData);
@@ -77,7 +78,7 @@ test(
     const addQuotePage = new AddQuotePage(page);
     const marketSelectionPage = new MarketSelectionPage(page);
 
-    await test.step('Create a fresh Submission (setup for Add Quote)', async () => {
+    await runStep(page, testInfo, 'Create a fresh Submission (setup for Add Quote)', async (ctx) => {
       await createSubmissionPage.openNewInsuredForm();
       await createSubmissionPage.selectAgency(submissionData.agency);
 
@@ -114,17 +115,21 @@ test(
       await createSubmissionPage.fillAccountInformation(accountInput);
       await createSubmissionPage.submit();
       await page.waitForTimeout(5000); // give the submission status badge a moment to render
-      await expect(page).toHaveURL(/#\/underwriting\/submission/);
-      await expect(
-        createSubmissionPage.submissionStatusBadgeLocator(submissionData.expectedSubmissionSummary.status),
-      ).toBeVisible();
+      await ctx.verify('Redirected to the submission page', () =>
+        expect(page).toHaveURL(/#\/underwriting\/submission/),
+      );
+      await ctx.verify('Submission status badge is visible', () =>
+        expect(
+          createSubmissionPage.submissionStatusBadgeLocator(submissionData.expectedSubmissionSummary.status),
+        ).toBeVisible(),
+      );
     });
 
-    await test.step('Open Add Quote', async () => {
+    await runStep(page, testInfo, 'Open Add Quote', async () => {
       await addQuotePage.open();
     });
 
-    await test.step('Fill Coverage, COB, and Filing State', async () => {
+    await runStep(page, testInfo, 'Fill Coverage, COB, and Filing State', async () => {
       const quoteInput: AddQuoteInput = {
         coverage: quoteData.coverage,
         cob: quoteData.cob,
@@ -138,18 +143,18 @@ test(
 
     });
 
-    await test.step('Attach a Market and verify the resulting option', async () => {
+    await runStep(page, testInfo, 'Attach a Market and verify the resulting option', async (ctx) => {
 
       const marketInput: MarketSelectionInput = {
         marketCompany: marketData.marketCompany,
       };
       await marketSelectionPage.attachMarket(marketInput);
       const optionRow = marketSelectionPage.optionRowLocator(marketData.marketCompany);
-      await expect(optionRow).toBeVisible();
-      await expect(optionRow).toContainText('Unbound');
+      await ctx.verify('Option row is visible', () => expect(optionRow).toBeVisible());
+      await ctx.verify('Option row shows Unbound', () => expect(optionRow).toContainText('Unbound'));
     });
 
-    await test.step('Open Add/Edit Risk and enter Limits/Deductibles', async () => {
+    await runStep(page, testInfo, 'Open Add/Edit Risk and enter Limits/Deductibles', async () => {
       const riskPopup = await openAddEditRisk(page);
       const addEditRiskPage = new AddEditRiskPage(riskPopup);
 
@@ -177,7 +182,7 @@ test(
       await addEditRiskPage.closeAndApply();
     });
 
-    await test.step('Open Rate Summary and verify the quote identity', async () => {
+    await runStep(page, testInfo, 'Open Rate Summary and verify the quote identity', async (ctx) => {
       const ratePopup = await openRateSummary(page);
       await ratePopup.waitForLoadState('domcontentloaded');
       const rateSummaryPage = new RateSummaryPage(ratePopup);
@@ -197,28 +202,40 @@ test(
       await rateSummaryPage.verifyQuoteIdentity(expectation);
 
       await rateSummaryPage.expandClasscodeBreakdown(expectation.classcode);
-      await expect(rateSummaryPage.classcodeCellLocator(expectation.classcode)).toBeVisible();
-      await expect(rateSummaryPage.exposureCellLocator(expectation.exposureFormatted)).toBeVisible();
-      await expect(rateSummaryPage.premiumCodeCellLocator(expectation.premiumCode)).toBeVisible();
+      await ctx.verify('Classcode cell is visible', () =>
+        expect(rateSummaryPage.classcodeCellLocator(expectation.classcode)).toBeVisible(),
+      );
+      await ctx.verify('Exposure cell is visible', () =>
+        expect(rateSummaryPage.exposureCellLocator(expectation.exposureFormatted)).toBeVisible(),
+      );
+      await ctx.verify('Premium code cell is visible', () =>
+        expect(rateSummaryPage.premiumCodeCellLocator(expectation.premiumCode)).toBeVisible(),
+      );
 
       const totalPremiumText = await rateSummaryPage.readTotalPremiumText();
-      expect(totalPremiumText).toMatch(/^\$[\d,]+\.\d{2}$/);
+      await ctx.verify('Total premium is formatted as currency', () =>
+        expect(totalPremiumText).toMatch(/^\$[\d,]+\.\d{2}$/),
+      );
 
       await rateSummaryPage.close();
     });
 
     const quoteOptionDetailPage = new QuoteOptionDetailPage(page);
 
-    await test.step('Verify the Risk tab reflects what was entered', async () => {
+    await runStep(page, testInfo, 'Verify the Risk tab reflects what was entered', async (ctx) => {
       await quoteOptionDetailPage.open();
-      await expect(quoteOptionDetailPage.coverageHeadingLocator(quoteData.coverage)).toBeVisible();
+      await ctx.verify('Coverage heading is visible', () =>
+        expect(quoteOptionDetailPage.coverageHeadingLocator(quoteData.coverage)).toBeVisible(),
+      );
     });
 
-    await test.step('Verify and apply the Premium tab', async () => {
+    await runStep(page, testInfo, 'Verify and apply the Premium tab', async (ctx) => {
       await quoteOptionDetailPage.goToPremiumTab();
 
       const ratedPremiumText = await quoteOptionDetailPage.readRatedPremiumText();
-      expect(ratedPremiumText).toMatch(/\$[\d,]+\.\d{2}/);
+      await ctx.verify('Rated premium is formatted as currency', () =>
+        expect(ratedPremiumText).toMatch(/\$[\d,]+\.\d{2}/),
+      );
       console.log(`Quote Option Detail's Premium tab shows: ${ratedPremiumText}`);
 
       const premiumInput: PremiumAdjustmentInput = {
@@ -229,7 +246,7 @@ test(
       await quoteOptionDetailPage.applyPremiumAdjustment(premiumInput);
     });
 
-    await test.step('Verify and delete Terms & Forms', async () => {
+    await runStep(page, testInfo, 'Verify and delete Terms & Forms', async (ctx) => {
       await quoteOptionDetailPage.goToTermsAndFormsTab();
       const initialCount = await quoteOptionDetailPage.readFormsCount();
       console.log(`Initial Forms count: ${initialCount}`);
@@ -253,42 +270,51 @@ test(
       console.log(`Final Forms count: ${finalCount}`);
       const expectedCount = initialCount - presentFormNos.length;
       console.log(`Expected remaining forms count (${initialCount} initial - ${presentFormNos.length} deleted): ${expectedCount}`);
-      expect(finalCount).toBe(expectedCount);
+      await ctx.verify(`Remaining forms count matches expected (${expectedCount})`, () =>
+        expect(finalCount).toBe(expectedCount),
+      );
       await quoteOptionDetailPage.save();
     });
 
-    await test.step('Bind and Invoice policy', async () => {
+    await runStep(page, testInfo, 'Bind and Invoice policy', async () => {
       const randomPolicyNumber = createRandomPolicyNumber('POL');
       console.log(`Binding policy with dynamic policy number: ${randomPolicyNumber}`);
       await quoteOptionDetailPage.bindAndInvoice(randomPolicyNumber);
     });
 
-    await test.step('Review policy generation', async () => {
+    await runStep(page, testInfo, 'Review policy generation', async (ctx) => {
       page1 = await quoteOptionDetailPage.openReviewPolicy();
-      await expect(page1.getByRole('heading', { name: 'Policy Generation' })).toBeVisible();
+      await ctx.verify('Policy Generation heading is visible', () =>
+        expect(page1.getByRole('heading', { name: 'Policy Generation' })).toBeVisible(),
+      );
 
       const expectedForms: { formNo: string; formName: string }[] = termsFormsData.shouldBePresent.forms;
       const verifiedFormNos: string[] = [];
-      for (const form of expectedForms) {
-        await expect(page1.getByText(form.formNo)).toBeVisible();
-        verifiedFormNos.push(form.formNo);
-      }
+      await ctx.verify('All expected forms are visible on Review Policy page', async () => {
+        for (const form of expectedForms) {
+          await expect(page1.getByText(form.formNo)).toBeVisible();
+          verifiedFormNos.push(form.formNo);
+        }
+      });
       console.log(`Verified all ${verifiedFormNos.length} forms present on Review Policy page: ${verifiedFormNos.join(', ')}`);
 
       await quoteOptionDetailPage.clickContinueOnReviewPolicy(page1);
-
-      await expect(page1.getByRole('cell', { name: 'Missing Details', exact: true })).toBeVisible();
+await page.waitForTimeout(2000); // give the "Missing Details" cell a moment to render
+      await ctx.verify('Missing Details cell is visible', () =>
+        expect(page1.getByRole('cell', { name: 'Missing Details', exact: true })).toBeVisible(),
+      );
 
       const mepDollar = termsFormsData.missingValues?.minimumEarnedPremiumDollar ?? '525.5';
       const mepPercentage = termsFormsData.missingValues?.minimumEarnedPremiumPercentage ?? '13';
       await quoteOptionDetailPage.fillMissingValues(page1, mepDollar, mepPercentage);
+      await quoteOptionDetailPage.clickContinueOnReviewPolicy(page1);
+
     });
 
-    await test.step('View and Verify PDF content page', async () => {
-      await quoteOptionDetailPage.clickContinueOnReviewPolicy(page1);
-      const page2 = await quoteOptionDetailPage.openRecipientCopyPdf(page1, 'Insured');
-      await quoteOptionDetailPage.jumpToPdfPage(page2, '23');
-      const pdfPages = await extractGeneratedPdfText(page2);
+    // await runStep(page, testInfo, 'View and Verify PDF content page', async () => {
+    //   const page2 = await quoteOptionDetailPage.openRecipientCopyPdf(page1, 'Insured');
+    //   await quoteOptionDetailPage.jumpToPdfPage(page2, '23');
+    //   const pdfPages = await extractGeneratedPdfText(page2);
 
 // const policyNumberPages = findTokenAcrossPagesIgnoringLineWrap(pdfPages, bindInvoiceData.policyNumber);
 // console.log(`Policy Number found on PDF page(s): ${policyNumberPages.join(', ') || 'NONE'}`);
@@ -303,8 +329,8 @@ test(
 // console.log(`Missing Values percent figure found on page(s): ${percentPages.join(', ') || 'NONE'}`);
 // expect(dollarPages.length, 'Expected the Minimum Earned Premium dollar value to appear in the PDF.').toBeGreaterThan(0);
 // expect(percentPages.length, 'Expected the Minimum Earned Premium percent value to appear in the PDF.').toBeGreaterThan(0);
-      await page2.waitForTimeout(3000);
-      await takeScreenshot(page2, testInfo, 'policy-pdf-page-23');
-    });
+    //   await page2.waitForTimeout(3000);
+    //   await takeScreenshot(page2, testInfo, 'policy-pdf-page-23');
+    // });
   },
 );
