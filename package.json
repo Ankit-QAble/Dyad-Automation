@@ -30,6 +30,7 @@
     "test:alis_core:batch-list-pdf-export:headed": "PLAYWRIGHT_BASE_URL=https://prod-alis-4-1-21.dyadtech.com/ALIS.BMS/APP/ playwright test --project=alis_core alis_core/tests/batch_list_pdf_export/batchListPdfExport.test.ts --headed",
     "test:alis_core:batch-list-back-navigation:headed": "PLAYWRIGHT_BASE_URL=https://prod-alis-4-1-21.dyadtech.com/ALIS.BMS/APP/ playwright test --project=alis_core alis_core/tests/batch_list_back_navigation/batchListBackNavigation.test.ts --headed",
     "test:alis_core:batch-list-search-by-number:headed": "PLAYWRIGHT_BASE_URL=https://prod-alis-4-1-21.dyadtech.com/ALIS.BMS/APP/ playwright test --project=alis_core alis_core/tests/batch_list_search_by_number/batchListSearchByNumber.test.ts --headed",
+    "test:nexsure:policy-lifecycle:headed": "PLAYWRIGHT_BASE_URL=https://jmiqaweb01.nexsure.com/nexui/ playwright test --project=nexsure nexsure/tests/policy_lifecycle/policyLifecycle.test.ts --headed",
     "test:smoke": "playwright test --grep @smoke",
     "test:shard": "playwright test --shard=${SHARD_INDEX}/${SHARD_TOTAL}",
     "report": "playwright show-report reports/html",

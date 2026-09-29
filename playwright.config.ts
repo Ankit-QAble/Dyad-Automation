@@ -38,7 +38,7 @@ export default defineConfig({
      * section) and navigate via BasePage.goto(), which resolves against this.
      * Point it at whichever product's base URL this run targets, e.g.
      * PLAYWRIGHT_BASE_URL="$NEXSURE_BASE_URL" npx playwright test --project=smoke */
-    baseURL: process.env.PLAYWRIGHT_BASE_URL,
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'https://jmiqaweb01.nexsure.com/nexui/',
     /* 'on' (not 'on-first-retry') so every test — passed or failed — gets a
      * trace viewable from the HTML report, not just ones that got retried. */
     trace: 'on',
