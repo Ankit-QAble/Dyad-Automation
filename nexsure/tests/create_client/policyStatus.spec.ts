@@ -291,109 +291,109 @@ test('test', async ({ page, testData }, testInfo) => {
   await expect(createEndorsementButton).toHaveText(`Create Endorsement`);
   await createEndorsementButton.click();
   await waitAfterAction();
-  // await page.getByRole('button', { name: 'Create Endorsement', exact: true }).click();
-  // await waitAfterAction();
-  // await expect(page.locator('#entity_console')).toContainText('Pending Endorsement', { timeout: 30000 });
-  // await capture('pending-endorsement');
-  // await page.getByRole('button', { name: 'Post' }).click();
-  // await waitAfterAction();
-  // await page.locator('button').filter({ hasText: /^Post$/ }).click();
-  // await waitAfterAction();
-  // await capture('endorsement-posted');
-  // await page.getByRole('button', { name: 'Service' }).click();
-  // await waitAfterAction();
-  // await page.getByRole('option', { name: 'Edit', exact: true }).click();
-  // await waitAfterAction();
-  // await expect(page.getByText('Edit Policy', { exact: true })).toBeVisible({ timeout: 30000 });
-  // const editDateField = page.getByRole('textbox').filter({ hasValue: '09/24/2026' }).first();
-  // await editDateField.fill('09/25/2026');
-  // await waitAfterAction();
-  // await editDateField.press('Tab');
-  // await waitAfterAction();
-  // await expect(editDateField).toHaveValue('09/25/2026');
-  // await page.getByRole('button', { name: 'Generate Edit' }).click();
-  // await waitAfterAction();
-  // await expect(page.locator('#entity_console')).toContainText('Pending Edit');
-  // await capture('pending-edit');
-  // await page.getByRole('button', { name: 'Post' }).click();
-  // await waitAfterAction();
-  // await page.getByRole('button', { name: 'Service' }).click();
-  // await waitAfterAction();
-  // await page.getByRole('option', { name: 'Renewal', exact: true }).click();
-  // await waitAfterAction();
-  // await expect(page.locator('#PendoRenewPolicyGuide')).toContainText('Renew Policy');
-  // await page.getByRole('button', { name: 'Create Renewal Policy' }).click();
-  // await waitAfterAction();
-  // await expect(page.locator('#entity_console')).toContainText('Future');
-  // await expect(page.locator('#entity_console')).toContainText('In Force');
-  // await capture('renewal-created');
-  // await page.getByRole('button', { name: 'In Force' }).click();
-  // await waitAfterAction();
-  // await expect(page.locator('#appWrapper')).toContainText('Policy In Forced Successfully');
-  // await capture('renewal-in-force');
-  // await expect(page.locator('div').filter({ hasText: /^Policy In Forced Successfully$/ }).nth(1)).toBeVisible();
-  // await page.getByRole('button', { name: 'Go to Policy' }).click();
-  // await waitAfterAction();
-  // await expect(page.locator('#entity_console')).toContainText('In Force');
-  // await page.getByRole('button', { name: 'Service' }).click();
-  // await waitAfterAction();
-  // await page.getByRole('option', { name: 'Cancellation', exact: true }).click();
-  // await waitAfterAction();
-  // await page.locator('#vs45__combobox').getByLabel('SelectLoading...').click();
-  // await waitAfterAction();
-  // await page.getByRole('option', { name: 'Insured Request' }).click();
-  // await waitAfterAction();
-  // await page.getByLabel('SelectLoading...').click();
-  // await waitAfterAction();
-  // await page.getByRole('option', { name: 'Flat' }).click();
-  // await waitAfterAction();
-  // await page.getByLabel('Insured RequestLoading...').click();
-  // await waitAfterAction();
-  // await page.getByRole('option', { name: 'Non-Payment' }).click();
-  // await waitAfterAction();
-  // await page.getByRole('button', { name: 'Generate Cancellation' }).click();
-  // await waitAfterAction();
-  // //await page.goto('https://jmiqaweb01.nexsure.com/nexui/#/entity_console/6/17452/policies/summary/3765/0/pi-detail/overview');
-  // await waitAfterAction();
-  // await expect(page.getByText('OPP-001402Pending Cancellation')).toBeVisible();
-  // await expect(page.locator('#entity_console')).toContainText('Pending Cancellation');
-  // await capture('pending-cancellation');
-  // await expect(page.locator('#entity_console')).toContainText('09/24/2026');
-  // await page.getByRole('button', { name: 'Post' }).click();
-  // await waitAfterAction();
-  // await page.getByLabel('SelectLoading...').click();
-  // await waitAfterAction();
-  // await page.getByRole('option', { name: 'Appointment' }).click();
-  // await waitAfterAction();
-  // await page.locator('textarea').click();
-  // await waitAfterAction();
-  // await page.locator('div').filter({ hasText: 'OK Cancel' }).nth(5).click();
-  // await waitAfterAction();
-  // await page.getByRole('button', { name: 'OK' }).click();
-  // await waitAfterAction();
-  // await expect(page.locator('#entity_console')).toContainText('Cancelled');
-  // await capture('policy-cancelled');
-  // await page.getByRole('link', { name: 'Policies', exact: true }).click();
-  // await waitAfterAction();
-  // await page.getByLabel('Active and FutureLoading...').click();
-  // await waitAfterAction();
-  // await page.getByRole('option', { name: 'Historical' }).click();
-  // await waitAfterAction();
-  // await expect(page.locator('#entity_console')).toContainText('Cancelled');
-  // await page.getByText('RenewPackageX100_General').click();
-  // await waitAfterAction();
-  // await expect(page.locator('#entity_console')).toMatchAriaSnapshot(`
-  //   - button "Print":
-  //     - img
-  //     - text: ""
-  //   - button "Reinstate":
-  //     - img
-  //     - text: ""
-  //   - button "Rewrite":
-  //     - img
-  //     - text: ""
-  //   `);
-  // await capture('historical-policy-verified');
+  await page.getByRole('button', { name: 'Create Endorsement', exact: true }).click();
+  await waitAfterAction();
+  await expect(page.locator('#entity_console')).toContainText('Pending Endorsement', { timeout: 30000 });
+  await capture('pending-endorsement');
+  await page.getByRole('button', { name: 'Post' }).click();
+  await waitAfterAction();
+  await page.locator('button').filter({ hasText: /^Post$/ }).click();
+  await waitAfterAction();
+  await capture('endorsement-posted');
+  await page.getByRole('button', { name: 'Service' }).click();
+  await waitAfterAction();
+  await page.getByRole('option', { name: 'Edit', exact: true }).click();
+  await waitAfterAction();
+  await expect(page.getByText('Edit Policy', { exact: true })).toBeVisible({ timeout: 30000 });
+  const editDateField = page.getByRole('textbox').filter({ hasValue: '09/24/2026' }).first();
+  await editDateField.fill('09/25/2026');
+  await waitAfterAction();
+  await editDateField.press('Tab');
+  await waitAfterAction();
+  await expect(editDateField).toHaveValue('09/25/2026');
+  await page.getByRole('button', { name: 'Generate Edit' }).click();
+  await waitAfterAction();
+  await expect(page.locator('#entity_console')).toContainText('Pending Edit');
+  await capture('pending-edit');
+  await page.getByRole('button', { name: 'Post' }).click();
+  await waitAfterAction();
+  await page.getByRole('button', { name: 'Service' }).click();
+  await waitAfterAction();
+  await page.getByRole('option', { name: 'Renewal', exact: true }).click();
+  await waitAfterAction();
+  await expect(page.locator('#PendoRenewPolicyGuide')).toContainText('Renew Policy');
+  await page.getByRole('button', { name: 'Create Renewal Policy' }).click();
+  await waitAfterAction();
+  await expect(page.locator('#entity_console')).toContainText('Future');
+  await expect(page.locator('#entity_console')).toContainText('In Force');
+  await capture('renewal-created');
+  await page.getByRole('button', { name: 'In Force' }).click();
+  await waitAfterAction();
+  await expect(page.locator('#appWrapper')).toContainText('Policy In Forced Successfully');
+  await capture('renewal-in-force');
+  await expect(page.locator('div').filter({ hasText: /^Policy In Forced Successfully$/ }).nth(1)).toBeVisible();
+  await page.getByRole('button', { name: 'Go to Policy' }).click();
+  await waitAfterAction();
+  await expect(page.locator('#entity_console')).toContainText('In Force');
+  await page.getByRole('button', { name: 'Service' }).click();
+  await waitAfterAction();
+  await page.getByRole('option', { name: 'Cancellation', exact: true }).click();
+  await waitAfterAction();
+  await page.locator('#vs45__combobox').getByLabel('SelectLoading...').click();
+  await waitAfterAction();
+  await page.getByRole('option', { name: 'Insured Request' }).click();
+  await waitAfterAction();
+  await page.getByLabel('SelectLoading...').click();
+  await waitAfterAction();
+  await page.getByRole('option', { name: 'Flat' }).click();
+  await waitAfterAction();
+  await page.getByLabel('Insured RequestLoading...').click();
+  await waitAfterAction();
+  await page.getByRole('option', { name: 'Non-Payment' }).click();
+  await waitAfterAction();
+  await page.getByRole('button', { name: 'Generate Cancellation' }).click();
+  await waitAfterAction();
+  //await page.goto('https://jmiqaweb01.nexsure.com/nexui/#/entity_console/6/17452/policies/summary/3765/0/pi-detail/overview');
+  await waitAfterAction();
+  await expect(page.getByText('OPP-001402Pending Cancellation')).toBeVisible();
+  await expect(page.locator('#entity_console')).toContainText('Pending Cancellation');
+  await capture('pending-cancellation');
+  await expect(page.locator('#entity_console')).toContainText('09/24/2026');
+  await page.getByRole('button', { name: 'Post' }).click();
+  await waitAfterAction();
+  await page.getByLabel('SelectLoading...').click();
+  await waitAfterAction();
+  await page.getByRole('option', { name: 'Appointment' }).click();
+  await waitAfterAction();
+  await page.locator('textarea').click();
+  await waitAfterAction();
+  await page.locator('div').filter({ hasText: 'OK Cancel' }).nth(5).click();
+  await waitAfterAction();
+  await page.getByRole('button', { name: 'OK' }).click();
+  await waitAfterAction();
+  await expect(page.locator('#entity_console')).toContainText('Cancelled');
+  await capture('policy-cancelled');
+  await page.getByRole('link', { name: 'Policies', exact: true }).click();
+  await waitAfterAction();
+  await page.getByLabel('Active and FutureLoading...').click();
+  await waitAfterAction();
+  await page.getByRole('option', { name: 'Historical' }).click();
+  await waitAfterAction();
+  await expect(page.locator('#entity_console')).toContainText('Cancelled');
+  await page.getByText('RenewPackageX100_General').click();
+  await waitAfterAction();
+  await expect(page.locator('#entity_console')).toMatchAriaSnapshot(`
+    - button "Print":
+      - img
+      - text: ""
+    - button "Reinstate":
+      - img
+      - text: ""
+    - button "Rewrite":
+      - img
+      - text: ""
+    `);
+  await capture('historical-policy-verified');
  
  
 });
